@@ -54,7 +54,7 @@ class PiperVoice:
             ),
         )
 
-    def phonemize(self, text: str) -> List[List[str]]:
+    def phonemize(self, text: str, data_path = None) -> List[List[str]]:
         """Text to phonemes grouped by sentence."""
         if self.config.phoneme_type == PhonemeType.ESPEAK:
             if self.config.espeak_voice == "ar":
@@ -62,7 +62,7 @@ class PiperVoice:
                 # https://github.com/mush42/libtashkeel/
                 text = tashkeel_run(text)
 
-            return phonemize_espeak(text, self.config.espeak_voice)
+            return phonemize_espeak(text, self.config.espeak_voice, data_path = data_path)
 
         if self.config.phoneme_type == PhonemeType.TEXT:
             return phonemize_codepoints(text)
@@ -95,6 +95,7 @@ class PiperVoice:
         noise_scale: Optional[float] = None,
         noise_w: Optional[float] = None,
         sentence_silence: float = 0.0,
+        data_path: Optional[string] = None,
     ):
         """Synthesize WAV audio from text."""
         wav_file.setframerate(self.config.sample_rate)
@@ -108,6 +109,7 @@ class PiperVoice:
             noise_scale=noise_scale,
             noise_w=noise_w,
             sentence_silence=sentence_silence,
+            data_path = data_path
         ):
             wav_file.writeframes(audio_bytes)
 
@@ -119,9 +121,10 @@ class PiperVoice:
         noise_scale: Optional[float] = None,
         noise_w: Optional[float] = None,
         sentence_silence: float = 0.0,
+        data_path: Optional[string] = None,
     ) -> Iterable[bytes]:
         """Synthesize raw audio per sentence from text."""
-        sentence_phonemes = self.phonemize(text)
+        sentence_phonemes = self.phonemize(text, data_path)
 
         # 16-bit mono
         num_silence_samples = int(sentence_silence * self.config.sample_rate)
