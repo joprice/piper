@@ -95,7 +95,7 @@ class PiperVoice:
         noise_scale: Optional[float] = None,
         noise_w: Optional[float] = None,
         sentence_silence: float = 0.0,
-        data_path: Optional[string] = None,
+        data_path: Optional[str] = None,
     ):
         """Synthesize WAV audio from text."""
         wav_file.setframerate(self.config.sample_rate)
@@ -121,7 +121,7 @@ class PiperVoice:
         noise_scale: Optional[float] = None,
         noise_w: Optional[float] = None,
         sentence_silence: float = 0.0,
-        data_path: Optional[string] = None,
+        data_path: Optional[str] = None,
     ) -> Iterable[bytes]:
         """Synthesize raw audio per sentence from text."""
         sentence_phonemes = self.phonemize(text, data_path)
